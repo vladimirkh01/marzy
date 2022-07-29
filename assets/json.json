@@ -1,0 +1,82 @@
+{
+  "status": "ok",
+  "message": "",
+  "categories": [
+    {
+      "id": 2,
+      "name": "Аптека",
+      "parent": 0,
+      "categories": [
+        {
+          "id": 9,
+          "name": "Антиседативные",
+          "parent": 2
+        },
+        {
+          "id": 8,
+          "name": "Обезболивающие",
+          "parent": 2
+        },
+        {
+          "id": 10,
+          "name": "Первая помощь",
+          "parent": 2
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Иное",
+      "parent": 0,
+      "categories": [
+        {
+          "id": 12,
+          "name": "Дети",
+          "parent": 11
+        },
+        {
+          "id": 14,
+          "name": "Наркотики",
+          "parent": 11
+        },
+        {
+          "id": 13,
+          "name": "Оружие",
+          "parent": 11
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Продукты",
+      "parent": 0,
+      "categories": [
+        {
+          "id": 6,
+          "name": "Алкоголь",
+          "parent": 1
+        },
+        {
+          "id": 3,
+          "name": "Бакалея",
+          "parent": 1
+        },
+        {
+          "id": 4,
+          "name": "Выпечка",
+          "parent": 1
+        },
+        {
+          "id": 7,
+          "name": "Напитки",
+          "parent": 1
+        },
+        {
+          "id": 16,
+          "name": "Табак",
+          "parent": 1
+        }
+      ]
+    }
+  ]
+}
