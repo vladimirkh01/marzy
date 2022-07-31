@@ -15,10 +15,10 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'components/custom_navigation_button.dart';
-import 'components/basket_item.dart';
 import 'components/divide_item.dart';
 import 'components/basket_button_item.dart';
 
+// ignore: must_be_immutable
 class BasketScreen extends StatelessWidget {
   static const String route = '/basket';
   num? numBasket;
@@ -319,7 +319,7 @@ class _BasketScreenAdditionalState extends State<BasketScreenAdditional> {
                     color: AppColors.accent.withAlpha(10),
                   ),
                   child: Text(
-                    '233 ₽',
+                    '250 ₽',
                     style: AppTextStyles.interMed14
                         .copyWith(color: AppColors.accent),
                   ),

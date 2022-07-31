@@ -106,12 +106,29 @@ class ProfilePage extends StatelessWidget {
                 },
               ),
             SizedBox(height: 20.h),
-            ProfileItem(
-              text: "4.73",
-              hint: "Рейтинг",
-              onClick: () {
-                print("Tapped profile item Рейтинг");
+            FutureBuilder(
+              future: postRequest1(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if(snapshot.data == null) {
+                  return SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.accent,
+                    ),
+                  );
+                } else {
+                  return ProfileItem(
+                    text: snapshot.data.toString(),
+                    hint: "Рейтинг",
+                    onClick: () {
+                      print("Tapped profile item Рейтинг");
+                    },
+                  );
+                }
               },
+
             ),
             if (param == "1") SizedBox(height: 20.h),
             if (param == "1")
@@ -305,259 +322,180 @@ class ProfilePage extends StatelessWidget {
     print(itemsList[0].user!.phone);
     return itemsList[0].user;
   }
+
+  Future<num?> postRequest1() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? action = prefs.getString('tokenSystem');
+    print(action);
+
+    var response = await http.get(
+      Uri.parse("https://marzy.ru/api/user/me"),
+      headers: {
+        "Auth": action!,
+      },
+    );
+
+    var result = utf8.decode(response.bodyBytes);
+    result = "[" + result.substring(0, result.length) + "]";
+    final data = await json.decode(result);
+    List<AccountItems> itemsList = List<AccountItems>.from(data.map((i) => AccountItems.fromJson(i)));
+    print(itemsList[0].user!.phone);
+    return itemsList[0].rating!.rating;
+  }
 }
 
 class AccountItems {
-  String? _status;
-  String? _message;
-  User? _user;
-  Auth? _auth;
+  String? status;
+  String? message;
+  User? user;
+  Auth? auth;
+  Rating? rating;
 
-  AccountItems({String? status, String? message, User? user, Auth? auth}) {
-    if (status != null) {
-      this._status = status;
-    }
-    if (message != null) {
-      this._message = message;
-    }
-    if (user != null) {
-      this._user = user;
-    }
-    if (auth != null) {
-      this._auth = auth;
-    }
-  }
-
-  String? get status => _status;
-  set status(String? status) => _status = status;
-  String? get message => _message;
-  set message(String? message) => _message = message;
-  User? get user => _user;
-  set user(User? user) => _user = user;
-  Auth? get auth => _auth;
-  set auth(Auth? auth) => _auth = auth;
+  AccountItems({this.status, this.message, this.user, this.auth, this.rating});
 
   AccountItems.fromJson(Map<String, dynamic> json) {
-    _status = json['status'];
-    _message = json['message'];
-    _user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    _auth = json['auth'] != null ? new Auth.fromJson(json['auth']) : null;
+    status = json['status'];
+    message = json['message'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    auth = json['auth'] != null ? new Auth.fromJson(json['auth']) : null;
+    rating =
+    json['rating'] != null ? new Rating.fromJson(json['rating']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this._status;
-    data['message'] = this._message;
-    if (this._user != null) {
-      data['user'] = this._user!.toJson();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
     }
-    if (this._auth != null) {
-      data['auth'] = this._auth!.toJson();
+    if (this.auth != null) {
+      data['auth'] = this.auth!.toJson();
+    }
+    if (this.rating != null) {
+      data['rating'] = this.rating!.toJson();
     }
     return data;
   }
 }
 
 class User {
-  int? _id;
-  String? _phone;
-  String? _email;
-  String? _surname;
-  String? _name;
-  String? _secondName;
-  String? _createDate;
-  int? _createDateTimestamp;
-  int? _activateStatus;
-  String? _activateStatusStr;
+  num? id;
+  String? phone;
+  String? email;
+  String? surname;
+  String? name;
+  String? secondName;
+  String? createDate;
+  num? createDateTimestamp;
+  num? activateStatus;
+  String? activateStatusStr;
 
   User(
-      {int? id,
-        String? phone,
-        String? email,
-        String? surname,
-        String? name,
-        String? secondName,
-        String? createDate,
-        int? createDateTimestamp,
-        int? activateStatus,
-        String? activateStatusStr}) {
-    if (id != null) {
-      this._id = id;
-    }
-    if (phone != null) {
-      this._phone = phone;
-    }
-    if (email != null) {
-      this._email = email;
-    }
-    if (surname != null) {
-      this._surname = surname;
-    }
-    if (name != null) {
-      this._name = name;
-    }
-    if (secondName != null) {
-      this._secondName = secondName;
-    }
-    if (createDate != null) {
-      this._createDate = createDate;
-    }
-    if (createDateTimestamp != null) {
-      this._createDateTimestamp = createDateTimestamp;
-    }
-    if (activateStatus != null) {
-      this._activateStatus = activateStatus;
-    }
-    if (activateStatusStr != null) {
-      this._activateStatusStr = activateStatusStr;
-    }
-  }
-
-  int? get id => _id;
-  set id(int? id) => _id = id;
-  String? get phone => _phone;
-  set phone(String? phone) => _phone = phone;
-  String? get email => _email;
-  set email(String? email) => _email = email;
-  String? get surname => _surname;
-  set surname(String? surname) => _surname = surname;
-  String? get name => _name;
-  set name(String? name) => _name = name;
-  String? get secondName => _secondName;
-  set secondName(String? secondName) => _secondName = secondName;
-  String? get createDate => _createDate;
-  set createDate(String? createDate) => _createDate = createDate;
-  int? get createDateTimestamp => _createDateTimestamp;
-  set createDateTimestamp(int? createDateTimestamp) =>
-      _createDateTimestamp = createDateTimestamp;
-  int? get activateStatus => _activateStatus;
-  set activateStatus(int? activateStatus) => _activateStatus = activateStatus;
-  String? get activateStatusStr => _activateStatusStr;
-  set activateStatusStr(String? activateStatusStr) =>
-      _activateStatusStr = activateStatusStr;
+      {this.id,
+        this.phone,
+        this.email,
+        this.surname,
+        this.name,
+        this.secondName,
+        this.createDate,
+        this.createDateTimestamp,
+        this.activateStatus,
+        this.activateStatusStr});
 
   User.fromJson(Map<String, dynamic> json) {
-    _id = json['id'];
-    _phone = json['phone'];
-    _email = json['email'];
-    _surname = json['surname'];
-    _name = json['name'];
-    _secondName = json['second_name'];
-    _createDate = json['create_date'];
-    _createDateTimestamp = json['create_date_timestamp'];
-    _activateStatus = json['activate_status'];
-    _activateStatusStr = json['activate_status_str'];
+    id = json['id'];
+    phone = json['phone'];
+    email = json['email'];
+    surname = json['surname'];
+    name = json['name'];
+    secondName = json['second_name'];
+    createDate = json['create_date'];
+    createDateTimestamp = json['create_date_timestamp'];
+    activateStatus = json['activate_status'];
+    activateStatusStr = json['activate_status_str'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this._id;
-    data['phone'] = this._phone;
-    data['email'] = this._email;
-    data['surname'] = this._surname;
-    data['name'] = this._name;
-    data['second_name'] = this._secondName;
-    data['create_date'] = this._createDate;
-    data['create_date_timestamp'] = this._createDateTimestamp;
-    data['activate_status'] = this._activateStatus;
-    data['activate_status_str'] = this._activateStatusStr;
+    data['id'] = this.id;
+    data['phone'] = this.phone;
+    data['email'] = this.email;
+    data['surname'] = this.surname;
+    data['name'] = this.name;
+    data['second_name'] = this.secondName;
+    data['create_date'] = this.createDate;
+    data['create_date_timestamp'] = this.createDateTimestamp;
+    data['activate_status'] = this.activateStatus;
+    data['activate_status_str'] = this.activateStatusStr;
     return data;
   }
 }
 
 class Auth {
-  int? _id;
-  String? _token;
-  String? _createDate;
-  String? _expireDate;
-  int? _accessType;
-  int? _userId;
-  int? _status;
-  String? _qAccessTypeText;
-  String? _qStatus;
+  num? id;
+  String? token;
+  String? createDate;
+  String? expireDate;
+  num? accessType;
+  num? userId;
+  num? status;
+  String? qAccessTypeText;
+  String? qStatus;
 
   Auth(
-      {int? id,
-        String? token,
-        String? createDate,
-        String? expireDate,
-        int? accessType,
-        int? userId,
-        int? status,
-        String? qAccessTypeText,
-        String? qStatus}) {
-    if (id != null) {
-      this._id = id;
-    }
-    if (token != null) {
-      this._token = token;
-    }
-    if (createDate != null) {
-      this._createDate = createDate;
-    }
-    if (expireDate != null) {
-      this._expireDate = expireDate;
-    }
-    if (accessType != null) {
-      this._accessType = accessType;
-    }
-    if (userId != null) {
-      this._userId = userId;
-    }
-    if (status != null) {
-      this._status = status;
-    }
-    if (qAccessTypeText != null) {
-      this._qAccessTypeText = qAccessTypeText;
-    }
-    if (qStatus != null) {
-      this._qStatus = qStatus;
-    }
-  }
-
-  int? get id => _id;
-  set id(int? id) => _id = id;
-  String? get token => _token;
-  set token(String? token) => _token = token;
-  String? get createDate => _createDate;
-  set createDate(String? createDate) => _createDate = createDate;
-  String? get expireDate => _expireDate;
-  set expireDate(String? expireDate) => _expireDate = expireDate;
-  int? get accessType => _accessType;
-  set accessType(int? accessType) => _accessType = accessType;
-  int? get userId => _userId;
-  set userId(int? userId) => _userId = userId;
-  int? get status => _status;
-  set status(int? status) => _status = status;
-  String? get qAccessTypeText => _qAccessTypeText;
-  set qAccessTypeText(String? qAccessTypeText) =>
-      _qAccessTypeText = qAccessTypeText;
-  String? get qStatus => _qStatus;
-  set qStatus(String? qStatus) => _qStatus = qStatus;
+      {this.id,
+        this.token,
+        this.createDate,
+        this.expireDate,
+        this.accessType,
+        this.userId,
+        this.status,
+        this.qAccessTypeText,
+        this.qStatus});
 
   Auth.fromJson(Map<String, dynamic> json) {
-    _id = json['id'];
-    _token = json['token'];
-    _createDate = json['create_date'];
-    _expireDate = json['expire_date'];
-    _accessType = json['access_type'];
-    _userId = json['user_id'];
-    _status = json['status'];
-    _qAccessTypeText = json['q_access_type_text'];
-    _qStatus = json['q_status'];
+    id = json['id'];
+    token = json['token'];
+    createDate = json['create_date'];
+    expireDate = json['expire_date'];
+    accessType = json['access_type'];
+    userId = json['user_id'];
+    status = json['status'];
+    qAccessTypeText = json['q_access_type_text'];
+    qStatus = json['q_status'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this._id;
-    data['token'] = this._token;
-    data['create_date'] = this._createDate;
-    data['expire_date'] = this._expireDate;
-    data['access_type'] = this._accessType;
-    data['user_id'] = this._userId;
-    data['status'] = this._status;
-    data['q_access_type_text'] = this._qAccessTypeText;
-    data['q_status'] = this._qStatus;
+    data['id'] = this.id;
+    data['token'] = this.token;
+    data['create_date'] = this.createDate;
+    data['expire_date'] = this.expireDate;
+    data['access_type'] = this.accessType;
+    data['user_id'] = this.userId;
+    data['status'] = this.status;
+    data['q_access_type_text'] = this.qAccessTypeText;
+    data['q_status'] = this.qStatus;
+    return data;
+  }
+}
+
+class Rating {
+  num? ordersCount;
+  num? rating;
+
+  Rating({this.ordersCount, this.rating});
+
+  Rating.fromJson(Map<String, dynamic> json) {
+    ordersCount = json['orders_count'];
+    rating = json['rating'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['orders_count'] = this.ordersCount;
+    data['rating'] = this.rating;
     return data;
   }
 }

@@ -75,10 +75,10 @@ class CatalogScreenAdditional extends StatefulWidget {
   CatalogScreenAdditional({Key? key, required this.categoryId}) : super(key: key);
 
   @override
-  State<CatalogScreenAdditional> createState() => _CatalogScreenAdditionalState();
+  State<CatalogScreenAdditional> createState() => CatalogScreenAdditionalState();
 }
 
-class _CatalogScreenAdditionalState extends State<CatalogScreenAdditional> {
+class CatalogScreenAdditionalState extends State<CatalogScreenAdditional> {
   // List<Map<String, dynamic>>? data;
   int valueBasketMain = 0;
   bool? stateUpdateData = false;

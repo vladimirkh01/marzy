@@ -74,14 +74,14 @@ class TemplateDetailScreen extends StatelessWidget {
                       quantity: 2,
                       text:
                           'Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit',
-                      totalPrice: 233,
+                      totalPrice: 250,
                     ),
                     DivideItem(),
                     BasketItem(
                       quantity: 2,
                       text:
                           'Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit',
-                      totalPrice: 233,
+                      totalPrice: 250,
                     ),
                     DivideItem(),
                     Row(
@@ -114,7 +114,7 @@ class TemplateDetailScreen extends StatelessWidget {
                               .copyWith(color: AppColors.black),
                         ),
                         Text(
-                          '233 ₽',
+                          '250 ₽',
                           style: AppTextStyles.interMed14
                               .copyWith(color: AppColors.accent),
                         ),
@@ -154,7 +154,7 @@ class TemplateDetailScreen extends StatelessWidget {
                             color: AppColors.accent.withAlpha(10),
                           ),
                           child: Text(
-                            '233 ₽',
+                            '250 ₽',
                             style: AppTextStyles.interMed14
                                 .copyWith(color: AppColors.accent),
                           ),

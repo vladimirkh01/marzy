@@ -48,7 +48,7 @@ class SetDeliveryPriceButton extends StatelessWidget {
                           CustomImage(image: 'assets/images/question_mark.svg'),
                           Spacer(),
                           Text(
-                            '233 ₽',
+                            '250 ₽',
                             style: AppTextStyles.interMed14
                                 .copyWith(color: AppColors.accent),
                           ),

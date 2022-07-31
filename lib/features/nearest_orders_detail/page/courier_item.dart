@@ -81,7 +81,7 @@ class CourierItem extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 Text(
-                  '233 ₽',
+                  '250 ₽',
                   style: AppTextStyles.interReg16.copyWith(
                     fontWeight: FontWeight.w500,
                     color: AppColors.accent,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:marzy/features/static/catalogs/catalogs.dart';
 import 'package:marzy/shared/presentation/colors.dart';
 import 'package:marzy/shared/presentation/text_styles.dart';
 
@@ -91,42 +92,47 @@ class CatalogDetailScreen extends StatelessWidget {
                     SizedBox(width: 14),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.fonGrey,
-                        borderRadius: BorderRadius.circular(43),
-                      ),
-                      child: Icon(
-                        Icons.remove,
-                        size: 20,
-                        color: AppColors.blackGrey,
-                      ),
-                    ),
-                    SizedBox(width: 26),
-                    Text(
-                      '$value',
-                      style: AppTextStyles.interMed14
-                          .copyWith(color: AppColors.black),
-                    ),
-                    SizedBox(width: 26),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.fonGrey,
-                        borderRadius: BorderRadius.circular(43),
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        size: 20,
-                        color: AppColors.blackGrey,
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Container(
+                //       padding: const EdgeInsets.all(10),
+                //       decoration: BoxDecoration(
+                //         color: AppColors.fonGrey,
+                //         borderRadius: BorderRadius.circular(43),
+                //       ),
+                //       child: Icon(
+                //         Icons.remove,
+                //         size: 20,
+                //         color: AppColors.blackGrey,
+                //       ),
+                //     ),
+                //     SizedBox(width: 26),
+                //     Text(
+                //       '$value',
+                //       style: AppTextStyles.interMed14
+                //           .copyWith(color: AppColors.black),
+                //     ),
+                //     SizedBox(width: 26),
+                //     Container(
+                //       padding: const EdgeInsets.all(10),
+                //       decoration: BoxDecoration(
+                //         color: AppColors.fonGrey,
+                //         borderRadius: BorderRadius.circular(43),
+                //       ),
+                //       child: GestureDetector(
+                //         onTap: () {
+                //           CatalogScreenAdditionalState().changeBasketRemove(1, 1, int.parse(value));
+                //         },
+                //         child: Icon(
+                //           Icons.add,
+                //           size: 20,
+                //           color: AppColors.blackGrey,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
             SizedBox(height: 20),
@@ -135,26 +141,26 @@ class CatalogDetailScreen extends StatelessWidget {
               style: AppTextStyles.interReg14.copyWith(fontSize: 18),
             ),
             Spacer(),
-            ElevatedButton(
-              onPressed: () {},
-              style: ButtonStyle(
-                minimumSize: MaterialStateProperty.all(
-                  Size(double.infinity, 40),
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8.0),
-                    ),
-                  ),
-                ),
-              ),
-              child: Text(
-                'Добавить в корзину',
-                style:
-                    AppTextStyles.interMed14.copyWith(color: AppColors.white),
-              ),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {},
+            //   style: ButtonStyle(
+            //     minimumSize: MaterialStateProperty.all(
+            //       Size(double.infinity, 40),
+            //     ),
+            //     shape: MaterialStateProperty.all(
+            //       RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.all(
+            //           Radius.circular(8.0),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            //   child: Text(
+            //     'Добавить в корзину',
+            //     style:
+            //         AppTextStyles.interMed14.copyWith(color: AppColors.white),
+            //   ),
+            // ),
             SizedBox(height: 20),
           ],
         ),

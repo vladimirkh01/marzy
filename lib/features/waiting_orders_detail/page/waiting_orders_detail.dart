@@ -248,7 +248,7 @@ class WaitingOrdersDetailPage extends StatelessWidget {
                         .copyWith(color: AppColors.black),
                   ),
                   Text(
-                    '233 ₽',
+                    '250 ₽',
                     style: AppTextStyles.interMed14
                         .copyWith(color: AppColors.accent),
                   )
