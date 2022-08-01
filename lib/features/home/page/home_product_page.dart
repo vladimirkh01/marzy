@@ -315,6 +315,7 @@ class _ProductTabAdditionalState extends State<ProductTabAdditional> {
                       shrinkWrap: true,
                       itemBuilder: (ctx, index) {
                         return CatalogItem(
+                            imageUrl: snapshot.data[index].image,
                             title: snapshot.data[index].name,
                             categoryId: snapshot.data[index].id,
                         );
@@ -373,7 +374,6 @@ class _ProductTabAdditionalState extends State<ProductTabAdditional> {
     final data = await json.decode(result);
     List<ItemProducts> itemsList = List<ItemProducts>.from(data.map((i) => ItemProducts.fromJson(i)));
     return itemsList[0].categories![widget.type.index].categories;
-
   }
 
 }
@@ -419,6 +419,7 @@ class Categories {
   num? id;
   String? name;
   num? parent;
+  String? image;
   List<CategoriesAdd>? categories;
 
   Categories({this.id, this.name, this.parent, this.categories});
@@ -427,6 +428,7 @@ class Categories {
     id = json['id'];
     name = json['name'];
     parent = json['parent'];
+    image = json['image'];
     if (json['categories'] != null) {
       categories = <CategoriesAdd>[];
       json['categories'].forEach((v) {
@@ -440,6 +442,7 @@ class Categories {
     data['id'] = this.id;
     data['name'] = this.name;
     data['parent'] = this.parent;
+    data['image'] = this.image;
     if (this.categories != null) {
       data['categories'] = this.categories!.map((v) => v.toJson()).toList();
     }
@@ -451,6 +454,7 @@ class CategoriesAdd {
   num? id;
   String? name;
   num? parent;
+  String? image;
 
   CategoriesAdd({this.id, this.name, this.parent});
 
@@ -458,6 +462,7 @@ class CategoriesAdd {
     id = json['id'];
     name = json['name'];
     parent = json['parent'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -465,6 +470,8 @@ class CategoriesAdd {
     data['id'] = this.id;
     data['name'] = this.name;
     data['parent'] = this.parent;
+    data['image'] = this.image;
+
     return data;
   }
 }

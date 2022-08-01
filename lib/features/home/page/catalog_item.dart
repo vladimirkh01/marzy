@@ -12,7 +12,7 @@ class CatalogItem extends StatelessWidget {
 
   CatalogItem({
     required this.title,
-    this.imageUrl,
+    required this.imageUrl,
     required this.categoryId
   });
 
@@ -33,6 +33,31 @@ class CatalogItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
             ),
           ),
+          imageUrl != null ? Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Container(
+                child: Image.network(
+                  "https://marzy.ru/api/files/get?uuid=$imageUrl",
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.accent,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ) : Container(),
           Padding(
             padding: EdgeInsets.only(bottom: 18.w, left: 18.w),
             child: Align(
