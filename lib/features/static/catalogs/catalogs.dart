@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -386,7 +385,7 @@ class CatalogScreenAdditionalState extends State<CatalogScreenAdditional> {
     final String? action = sharedPreferences.getString('tokenSystem');
     if(!stateUpdateData!) {
       var response = await http.get(
-          Uri.parse("https://marzy.ru/api/product/get/list?category_id=" + categoryId.toString())
+          Uri.parse("https://marzy.ru/api/product/get/list?page_size=50&category_id=" + categoryId.toString())
       );
 
       var basketRes = await http.get(
