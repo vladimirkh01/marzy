@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:marzy/features/auth/verification/page/verification_screen.dart';
+import 'package:marzy/features/help/page/help.dart';
 import 'package:marzy/features/home/page/home.dart';
 import 'package:marzy/features/order_pub/order_pub.dart';
 import 'package:marzy/features/profile/page/profile_item.dart';
@@ -262,7 +263,12 @@ class ProfilePage extends StatelessWidget {
                 foregroundColor: MaterialStateProperty.all(AppColors.black),
                 backgroundColor: MaterialStateProperty.all(AppColors.fon),
               ),
-              onPressed: () => null,
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HelpScreen()));
+              },
               child: Container(
                 child: Text(AppStrings.support),
                 alignment: Alignment.centerLeft,

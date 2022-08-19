@@ -139,12 +139,33 @@ class _BasketScreenAdditionalState extends State<BasketScreenAdditional> {
                                 width: MediaQuery.of(context).size.width,
                                 child: Row(
                                   children: [
-                                    Container(
+                                    snapshot.data[ind].product.photos[0] == null ? Container(
                                       height: 70.w,
                                       width: 70.w,
                                       decoration: BoxDecoration(
                                         color: AppColors.fonGrey,
                                         borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ) : SizedBox(
+                                      width: 70.w,
+                                      height: 70.h,
+                                      child: Image.network(
+                                        "https://marzy.ru/api/files/get?uuid=${snapshot.data[ind].product.photos[0]}",
+                                        fit: BoxFit.contain,
+                                        loadingBuilder: (BuildContext context, Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: AppColors.accent,
+                                              value: loadingProgress.expectedTotalBytes != null
+                                                  ? loadingProgress.cumulativeBytesLoaded /
+                                                  loadingProgress.expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                     Spacer(),
@@ -297,7 +318,21 @@ class _BasketScreenAdditionalState extends State<BasketScreenAdditional> {
                     ],
                   );
                 } else {
-                  return CircularProgressIndicator();
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Место доставки',
+                        style: AppTextStyles.interMed14
+                            .copyWith(color: AppColors.black),
+                      ),
+                      Text(
+                          "Адрес неизвестен",
+                          style: AppTextStyles.interMed14
+                              .copyWith(color: AppColors.accent)
+                      )
+                    ],
+                  );
                 }
               },
             ),
@@ -518,6 +553,7 @@ class _BasketScreenAdditionalState extends State<BasketScreenAdditional> {
   double getValueSum() {
     var sumOfAllBasket = 0.0;
     for(var i = 0; i < widget.itemsList![0].basket!.products!.length; i++) {
+      if(widget.itemsList![0].basket!.products![i].product.cost == null) print(i);
       sumOfAllBasket += (widget.itemsList![0].basket!.products![i].count * widget.itemsList![0].basket!.products![i].product.cost);
     }
     return sumOfAllBasket + (sumOfAllBasket / 100 * 2) + 233;
@@ -526,6 +562,7 @@ class _BasketScreenAdditionalState extends State<BasketScreenAdditional> {
   double getValueBasket() {
     var sumOfAllBasket = 0.0;
     for(var i = 0; i < widget.itemsList![0].basket!.products!.length; i++) {
+      if(widget.itemsList![0].basket!.products![i].product.cost == null) print(i);
       sumOfAllBasket += (widget.itemsList![0].basket!.products![i].count * widget.itemsList![0].basket!.products![i].product.cost);
     }
     return sumOfAllBasket;
@@ -534,6 +571,7 @@ class _BasketScreenAdditionalState extends State<BasketScreenAdditional> {
   double getValuePanel() {
     var sumOfAllBasket = 0.0;
     for(var i = 0; i < widget.itemsList![0].basket!.products!.length; i++) {
+      if(widget.itemsList![0].basket!.products![i].product.cost == null) print(i);
       sumOfAllBasket += (widget.itemsList![0].basket!.products![i].count * widget.itemsList![0].basket!.products![i].product.cost);
     }
     return sumOfAllBasket / 100 * 2;
@@ -622,9 +660,11 @@ class _BasketScreenAdditionalState extends State<BasketScreenAdditional> {
 
       try {
         widget.itemsList = List<BasketUser>.from(data.map((i) => BasketUser.fromJson(i)));
-        setState(() => sumOfAllProjectMain = getValueSum());
-        setState(() => panelSum = getValuePanel());
-        setState(() => basketSum = getValueBasket());
+        Future.delayed(Duration(seconds: 1), () {
+          setState(() => sumOfAllProjectMain = getValueSum());
+          setState(() => panelSum = getValuePanel());
+          setState(() => basketSum = getValueBasket());
+        });
         widget.numBasket = widget.itemsList![0].basket!.id!;
         return widget.itemsList![0].basket!.products;
       } catch (e) {

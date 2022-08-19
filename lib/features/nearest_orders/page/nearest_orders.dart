@@ -1186,7 +1186,7 @@ class GeocoderMetaData {
 
   GeocoderMetaData.fromJson(Map<String, dynamic> json) {
     precision = json['precision'];
-    text = json['text'];
+    text = json['text.txt'];
     kind = json['kind'];
     address =
     json['Address'] != null ? new Address.fromJson(json['Address']) : null;
@@ -1198,7 +1198,7 @@ class GeocoderMetaData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['precision'] = this.precision;
-    data['text'] = this.text;
+    data['text.txt'] = this.text;
     data['kind'] = this.kind;
     if (this.address != null) {
       data['Address'] = this.address!.toJson();

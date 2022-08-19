@@ -121,14 +121,14 @@ class HomePageState extends State<HomePage>
                   ),
                 ),
                 actions: [
-                  if (!provider.searching)
-                    CustomNavigationButton(
-                      image: AppImages.searchButton,
-                      onTap: () {
-                        _searchController.clear();
-                        provider.setSearching = true;
-                      },
-                    ),
+                  // if (!provider.searching)
+                  //   CustomNavigationButton(
+                  //     image: AppImages.searchButton,
+                  //     onTap: () {
+                  //       _searchController.clear();
+                  //       provider.setSearching = true;
+                  //     },
+                  //   ),
                   if (!provider.searching) SizedBox(width: 5.w),
                   if (!provider.searching)
                     statusLoadingUserData == false ? CustomNavigationButton(

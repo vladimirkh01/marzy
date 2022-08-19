@@ -49,16 +49,16 @@ class TemplatesScreen extends StatelessWidget {
         //     ),
         //   ),
         // ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: SearchButton(
-              image: AppImages.searchButton,
-              width: 48,
-              height: 48,
-            ),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.only(right: 10.0),
+        //     child: SearchButton(
+        //       image: AppImages.searchButton,
+        //       width: 48,
+        //       height: 48,
+        //     ),
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(

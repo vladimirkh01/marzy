@@ -28,34 +28,34 @@ class CatalogsScreen extends StatelessWidget {
           ),
         ),
         // title: Text('Овощи и зелень'),
-        title: Container(
-          width: 227.w,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppColors.fon,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: AppColors.fon,
-              width: 0.001,
-            ),
-          ),
-          child: Center(
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.search,
-                  size: 18,
-                ),
-                hintText: 'Поиск',
-                border: InputBorder.none,
-                hintStyle: AppTextStyles.interMed14
-                    .copyWith(color: AppColors.blackGrey),
-                focusColor: AppColors.fon,
-                fillColor: AppColors.fon,
-              ),
-            ),
-          ),
-        ),
+        // title: Container(
+        //   width: 227.w,
+        //   height: 40,
+        //   decoration: BoxDecoration(
+        //     color: AppColors.fon,
+        //     borderRadius: BorderRadius.circular(8),
+        //     border: Border.all(
+        //       color: AppColors.fon,
+        //       width: 0.001,
+        //     ),
+        //   ),
+        //   child: Center(
+        //     child: TextField(
+        //       decoration: InputDecoration(
+        //         prefixIcon: Icon(
+        //           Icons.search,
+        //           size: 18,
+        //         ),
+        //         hintText: 'Поиск',
+        //         border: InputBorder.none,
+        //         hintStyle: AppTextStyles.interMed14
+        //             .copyWith(color: AppColors.blackGrey),
+        //         focusColor: AppColors.fon,
+        //         fillColor: AppColors.fon,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         // actions: [
         //   SearchButton(
         //     image: AppImages.searchButton,
@@ -70,7 +70,7 @@ class CatalogsScreen extends StatelessWidget {
 }
 
 class CatalogScreenAdditional extends StatefulWidget {
-  int categoryId;
+  final int categoryId;
   CatalogScreenAdditional({Key? key, required this.categoryId}) : super(key: key);
 
   @override
@@ -83,9 +83,13 @@ class CatalogScreenAdditionalState extends State<CatalogScreenAdditional> {
   bool? stateUpdateData = false;
   List<CatalogItems>? itemsList;
   List<BasketUser>? itemsListBasket;
+  var isLoading = false;
+  var page = 0;
+  var scrollController = ScrollController();
 
   @override
   initState() {
+    scrollController.addListener(pagination);
     super.initState();
   }
 
@@ -125,6 +129,7 @@ class CatalogScreenAdditionalState extends State<CatalogScreenAdditional> {
               }
               else {
                 return GridView.builder(
+                  controller: scrollController,
                   itemCount: snapshot.data.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -380,44 +385,52 @@ class CatalogScreenAdditionalState extends State<CatalogScreenAdditional> {
     );
   }
 
+  void pagination() {
+    if ((scrollController.position.pixels == scrollController.position.maxScrollExtent)) {}
+  }
+
   Future<List<Products>?> postRequest(int categoryId) async {
+    var response;
+    var basketRes;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String? action = sharedPreferences.getString('tokenSystem');
     if(!stateUpdateData!) {
-      var response = await http.get(
-          Uri.parse("https://marzy.ru/api/product/get/list?page_size=50&category_id=" + categoryId.toString())
-      );
-
-      var basketRes = await http.get(
-        Uri.parse("https://marzy.ru/api/basket/get"),
-        headers: {
-          "Auth": action!,
-        },
-      );
-
-      var basketResult = utf8.decode(basketRes.bodyBytes);
-      basketResult = "[" + basketResult.substring(0, basketResult.length) + "]";
-      final basketData = await json.decode(basketResult);
-      itemsListBasket = List<BasketUser>.from(basketData.map((i) => BasketUser.fromJson(i)));
-
       print("https://marzy.ru/api/product/get/list?category_id=" + categoryId.toString());
+      print("https://marzy.ru/api/product/get/list?page_size=100&category_id=" + categoryId.toString());
       try {
+        response = await http.get(
+            Uri.parse("https://marzy.ru/api/product/get/list?page_size=100&category_id=" + categoryId.toString())
+        );
+
+        basketRes = await http.get(
+          Uri.parse("https://marzy.ru/api/basket/get"),
+          headers: {
+            "Auth": action!,
+          },
+        );
+
         var result = utf8.decode(response.bodyBytes);
         result = "[" + result.substring(0, result.length) + "]";
         final data = await json.decode(result);
         itemsList = List<CatalogItems>.from(data.map((i) => CatalogItems.fromJson(i)));
       } catch (e) {
-        print(e);
+        print("Got error: $e");
       }
 
       try {
-        for(int i = 0; i < itemsList![0].products!.length; i++) {
-          if(i == itemsListBasket![0].basket!.products![i].productId && i == itemsList![0].products![i].id) {
-            print(i);
+        if(itemsListBasket!.isEmpty) {
+          var basketResult = utf8.decode(basketRes.bodyBytes);
+          basketResult = "[" + basketResult.substring(0, basketResult.length) + "]";
+          final basketData = await json.decode(basketResult);
+          itemsListBasket = List<BasketUser>.from(basketData.map((i) => BasketUser.fromJson(i)));
+          for(int i = 0; i < itemsList![0].products!.length; i++) {
+            if(i == itemsListBasket![0].basket!.products![i].productId && i == itemsList![0].products![i].id) {
+              print(i);
+            }
           }
         }
       } catch (e) {
-        print(e);
+        print("Got error: $e");
       }
 
       stateUpdateData = true;
@@ -769,7 +782,7 @@ class Basket {
     }
     status = json['status'];
     createDate = json['create_date'];
-    cost = json['cost'];
+    cost = json['cost'] == null ? 0 : json['cost'];
   }
 
   Map<String, dynamic> toJson() {
@@ -818,7 +831,8 @@ class Product {
   String? description;
   double? weight;
   String? article;
-  double? cost;
+  List<String>? photos;
+  num? cost;
   int? shopId;
   String? unit;
 
@@ -831,17 +845,19 @@ class Product {
         this.article,
         this.cost,
         this.shopId,
+        this.photos,
         this.unit});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
+    name = json['name'] == null ? "" : json['name'];
     categoryId = json['category_id'];
     description = json['description'];
     weight = json['weight'];
     article = json['article'];
-    cost = json['cost'];
+    cost = json['cost'] == null ? 0 : json['cost'];
     shopId = json['shop_id'];
+    photos = json['photos'].cast<String>();
     unit = json['unit'];
   }
 
@@ -854,6 +870,7 @@ class Product {
     data['weight'] = this.weight;
     data['article'] = this.article;
     data['cost'] = this.cost;
+    data['photos'] = this.photos;
     data['shop_id'] = this.shopId;
     data['unit'] = this.unit;
     return data;
